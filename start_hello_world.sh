@@ -1,0 +1,1 @@
+cargo run -q --manifest-path ./Rust/hello_world/Cargo.toml
