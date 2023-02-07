@@ -2,17 +2,20 @@ use std::error::Error;
 use std::fs;
 
 pub fn  run(config: Config) -> Result<(), Box<dyn Error>> {
-    read_file(&config.file_path)?;
+    let contents = read_file(&config.file_path)?;
+
+    for lines in search(&config.query, &contents) {
+        println!("{lines}")
+    }
     Ok(())
 }
 
 
-fn read_file(file_path: &str) -> Result<(), Box<dyn Error>> {
-    println!("In file {}", file_path);
+fn read_file(file_path: &str) -> Result<String, Box<dyn Error>> {
 
     let contents = fs::read_to_string(file_path)?;
-    println!("With text: {}", contents);
-    Ok(())
+
+    Ok(contents)
 }
 
 pub struct Config {
@@ -30,4 +33,33 @@ impl Config {
 
         Ok(Config { query, file_path })
     }
+}
+
+fn search<'a>(query: &str, content: &'a str) -> Vec< &'a str> {
+    let mut result: Vec<&str> = Vec::new();
+    
+    
+    for lines in content.lines() {
+        if lines.contains(query) {
+            result.push(lines);
+        }
+    }
+    result
+}
+
+#[cfg(test)]
+mod test {
+    
+    use super::*;
+    
+    #[test]
+    fn one_result() {
+        let query = "dict";
+        let content = "\
+Rust:
+save, fast, prodictive.
+Pick free.";
+
+        assert_eq!(vec!["save, fast, prodictive."], search(query, content))
+    } 
 }

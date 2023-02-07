@@ -11,7 +11,6 @@ fn main() {
         process::exit(1);
     });
 
-    println!("file={}, query={}", config.file_path, config.query);
     if let Err(e) = minigrep::run(config) {
         println!("Aplication error: {e}");
         process::exit(1);
