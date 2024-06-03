@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Any, SupportsIndex
+from typing import Any, Self, SupportsIndex
 from operator import index
 
 
 @dataclass
 class Node:
-    value: Any | None
+    value: Any
     head: Node | None = None
     tail: Node | None = None
 
@@ -93,7 +93,7 @@ class LinkedList:
         for value in iterable:
             self.append(value)
 
-    def append(self, value):
+    def append(self, value: Any) -> None:
         new_node = Node(value=value, head=self._tail, tail=None)
 
         if self._tail is not None:
@@ -105,7 +105,7 @@ class LinkedList:
 
         self._len += 1
 
-    def append_left(self, value):
+    def append_left(self, value: Any) -> None:
         new_node = Node(value=value, head=None, tail=self._head)
 
         if self._head is not None:
@@ -117,7 +117,7 @@ class LinkedList:
 
         self._len += 1
 
-    def pop(self) -> Any:
+    def pop(self) -> None:
         if self._tail is None:
             raise IndexError("pop from empty linked list")
 
@@ -127,7 +127,7 @@ class LinkedList:
 
         self._len -= 1
 
-    def pop_left(self):
+    def pop_left(self) -> None:
         if self._head is None:
             raise IndexError("pop from empty linked list")
         self._head = self._head.tail
@@ -139,12 +139,12 @@ class LinkedList:
     def __len__(self) -> int:
         return self._len
 
-    def __getitem__(self, i: SupportsIndex | slice):
+    def __getitem__(self, i: SupportsIndex | slice) -> Self | Any:
         if isinstance(i, slice):
             return self._get_slice(i)
         return self._get_by_index(i)
 
-    def _get_slice(self, i: slice):
+    def _get_slice(self, i: slice) -> Self:
         cls = type(self)
         values = []
         for item in range(*i.indices(len(self))):
@@ -155,7 +155,7 @@ class LinkedList:
                 break
         return cls(values)
 
-    def _get_by_index(self, i: SupportsIndex):
+    def _get_by_index(self, i: SupportsIndex) -> Any:
         if self._head is None:
             raise IndexError
 
