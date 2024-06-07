@@ -1,3 +1,5 @@
+use std::io::{self};
+
 fn main() {
     let numbers = vec![1, 2, 3, 4, 5, 6, 7, 8, 9];
     let result = sum(numbers);
@@ -14,6 +16,8 @@ fn main() {
     let numbers = vec![10, 8, 2, 6, 3, 6, 1, 4, 7, 5, 9];
     let result_max = quicksort(numbers);
     assert_eq!(result_max, vec![1, 2, 3, 4, 5, 6, 6, 7, 8, 9, 10]);
+
+    servers();
 }
 
 fn sum(list: Vec<isize>) -> isize {
@@ -87,5 +91,32 @@ fn quicksort(mut list: Vec<isize>) -> Vec<isize> {
         result.extend(vec![main_element]);
         result.extend(quicksort(head));
         return result;
+    }
+}
+
+fn servers() {
+    let stdin = io::stdin();
+    let mut inputs = stdin.lines();
+    let count_servers: isize = inputs.next().unwrap().unwrap().parse().unwrap();
+    let mut list_input = Vec::new();
+    let mut total_err: f64 = 0.0;
+    for _ in 0..count_servers {
+        let server = inputs.next();
+        let info_about_servers: Vec<f64> = server
+            .unwrap()
+            .unwrap()
+            .split_whitespace()
+            .map(|s| s.parse().unwrap())
+            .collect();
+        let percent_response = info_about_servers[0];
+        let percent_err = info_about_servers[1];
+        let count_error_100_response = percent_response * percent_err / 100.0;
+        total_err += count_error_100_response;
+        list_input.push(count_error_100_response);
+    }
+
+    for count_err in list_input {
+        let result: f64 = 1.0 / total_err * count_err;
+        println!("{}", result);
     }
 }
